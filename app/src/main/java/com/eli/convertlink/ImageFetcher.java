@@ -33,8 +33,11 @@ public class ImageFetcher extends AsyncTask<ArrayList<MusicTrack>, String, Array
         TrackAdapter adpater = (TrackAdapter) listView.getAdapter();
         print("here at the end");
 //        trackList.forEach(a -> print(a.getBitmap().toString()));
-        adpater.setList(trackList);
-        adpater.notifyDataSetChanged();
+        TrackAdapter listAdapter = new TrackAdapter(activity, trackList);
+        listView.setAdapter(listAdapter);
+
+//        adpater.setList(trackList);
+//        adpater.notifyDataSetChanged();
     }
 
     @Override

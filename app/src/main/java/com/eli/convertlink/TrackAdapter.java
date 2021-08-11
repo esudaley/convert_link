@@ -19,54 +19,49 @@ import java.util.List;
 
 public class TrackAdapter extends ArrayAdapter<MusicTrack> {
 
-    private Context mContext;
-//    private List<Track> list = new ArrayList<>();
+    private Context context;
     private List<MusicTrack> list;
 
-    public TrackAdapter(Context context, List<MusicTrack> list) {
-        super(context, 0 , list);
-        mContext = context;
-        this.list = list;
+    public TrackAdapter(Context context, List<MusicTrack> musicList) {
+        super(context, 0 , musicList);
+        this.context = context;
+        this.list = musicList;
     }
 
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View listItem = convertView;
-        if(listItem == null)
-            listItem = LayoutInflater.from(mContext).inflate(R.layout.list_item,parent,false);
-
-        MusicTrack currentTrack = list.get(position);
-
-        ImageView image = (ImageView)listItem.findViewById(R.id.imageView_albumArt);
-        Bitmap b = currentTrack.getBitmap();
-        if (b == null){
-            b = BitmapFactory.decodeResource(mContext.getResources(),
-                R.drawable.blank_album);
-        }
-        image.setImageBitmap(b);
-        TextView name = (TextView) listItem.findViewById(R.id.textView_name);
-        name.setText(currentTrack.getTrackName());
+        TextView trackName = (TextView) listItem.findViewById(R.id.textView_name);
         TextView artist = (TextView) listItem.findViewById(R.id.textView_artist);
-        artist.setText(currentTrack.getArtist());
+        ImageView albumArt = (ImageView)listItem.findViewById(R.id.imageView_albumArt);
         ImageView shareIcon = listItem.findViewById(R.id.share_button);
+
+        if (listItem == null)
+            listItem = LayoutInflater.from(context).inflate(R.layout.list_item,parent,false);
+        MusicTrack musicTrack = list.get(position);
+
+        Bitmap bitmap = musicTrack.getBitmap();
+        if (bitmap == null){
+            bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.blank_album);
+        }
+
+        trackName.setText(musicTrack.getTrackName());
+        artist.setText(musicTrack.getArtist());
+        albumArt.setImageBitmap(bitmap);
         shareIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent myIntent = new Intent(Intent.ACTION_SEND);
                 myIntent.setType("text/plain");
-                String body = currentTrack.getUrl();
+                String body = musicTrack.getUrl();
 //                String sub = "Your Subject";
 //                myIntent.putExtra(Intent.EXTRA_SUBJECT,sub);
                 myIntent.putExtra(Intent.EXTRA_TEXT,body);
-                mContext.startActivity(Intent.createChooser(myIntent, "Share Using"));
+                context.startActivity(Intent.createChooser(myIntent, "Share Using"));
             }
         });
+
         return listItem;
-    }
-
-    public void setList(List<MusicTrack> list) {
-        this.list = list;
-
     }
 }

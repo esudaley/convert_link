@@ -3,6 +3,7 @@ package com.eli.convertlink;
 import android.app.Activity;
 import android.util.Log;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -20,7 +21,6 @@ import retrofit.client.Response;
 final class SpotifyConverter extends AppCompatActivity {
     final static SpotifyApi API = new SpotifyApi();
     final static SpotifyService SPOTIFY = API.getService();
-
     static Token token = Authenticator.generateToken();
 
     private SpotifyConverter(){}
@@ -51,14 +51,11 @@ final class SpotifyConverter extends AppCompatActivity {
                     printDebugInfo(track);
                 }
 
-                TrackAdapter mAdapter = new TrackAdapter(context, musicList);
-                listView.setAdapter(mAdapter);
-
                 new ImageFetcher(context).execute(musicList);
             }
-
             @Override
             public void failure(RetrofitError error) {
+                Toast.makeText(context, "Unable to fetch results", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -69,11 +66,11 @@ final class SpotifyConverter extends AppCompatActivity {
         print("Url: " + track.external_urls.get("spotify"));
     }
 
-    static void print(String text) {
+    protected static void print(String text) {
         Log.d("mytag", text);
     }
 
-    static void print(int num){
+    protected static void print(int num){
         print(String.valueOf(num));
     }
 }
